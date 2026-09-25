@@ -16,9 +16,14 @@ public final class Proposal {
     private final Speaker speaker;
     private final ProposalStatus status;
     private final Instant submittedAt;
+    private final String eventId;
 
+    // NOTE: eventId is a TEMPORARY shim added locally in this worktree so that adapter tests
+    // (web + persistence) can construct a Proposal linked to an event. Another agent is adding
+    // the definitive eventId support to Proposal.submit(...)/reconstitute(...) in a parallel
+    // worktree; the orchestrator will reconcile both versions of this file at merge time.
     private Proposal(ProposalId id, String title, String description, Speaker speaker,
-                      ProposalStatus status, Instant submittedAt) {
+                      ProposalStatus status, Instant submittedAt, String eventId) {
         if (title == null || title.isBlank()) {
             throw new InvalidProposalException("Proposal title must not be blank");
         }
@@ -34,15 +39,27 @@ public final class Proposal {
         this.speaker = speaker;
         this.status = Objects.requireNonNull(status, "status must not be null");
         this.submittedAt = Objects.requireNonNull(submittedAt, "submittedAt must not be null");
+        this.eventId = eventId;
     }
 
     public static Proposal submit(String title, String description, Speaker speaker, Instant submittedAt) {
-        return new Proposal(ProposalId.newId(), title, description, speaker, ProposalStatus.SUBMITTED, submittedAt);
+        return submit(title, description, speaker, submittedAt, null);
+    }
+
+    public static Proposal submit(String title, String description, Speaker speaker, Instant submittedAt,
+                                   String eventId) {
+        return new Proposal(ProposalId.newId(), title, description, speaker, ProposalStatus.SUBMITTED, submittedAt,
+                eventId);
     }
 
     public static Proposal reconstitute(ProposalId id, String title, String description, Speaker speaker,
                                          ProposalStatus status, Instant submittedAt) {
-        return new Proposal(id, title, description, speaker, status, submittedAt);
+        return reconstitute(id, title, description, speaker, status, submittedAt, null);
+    }
+
+    public static Proposal reconstitute(ProposalId id, String title, String description, Speaker speaker,
+                                         ProposalStatus status, Instant submittedAt, String eventId) {
+        return new Proposal(id, title, description, speaker, status, submittedAt, eventId);
     }
 
     public ProposalId id() {
@@ -67,6 +84,10 @@ public final class Proposal {
 
     public Instant submittedAt() {
         return submittedAt;
+    }
+
+    public String eventId() {
+        return eventId;
     }
 
     @Override
