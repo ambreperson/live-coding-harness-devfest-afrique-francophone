@@ -102,16 +102,16 @@ _Depends on: Phase 0. Can run in parallel with: Phase 1a, 1b, 1c, 1d._
 ### Phase 2: Câblage et bout-en-bout
 _Depends on: Phase 1a, 1b, 1c, 1d, 1e (toutes). Can run in parallel with: none — c'est le seul point où toutes les pièces doivent exister ensemble._
 
-- [ ] Créer `EventConfiguration` (`@Configuration`) exposant les beans `CreateEventUseCase` (`CreateEventService` + `SaveEventPort`), `ListEventsUseCase` (`ListEventsService` + `ListEventsPort`) et `FindEventUseCase` (`FindEventService` + `FindEventPort`) dans `event/config/EventConfiguration.java`
-- [ ] Créer le package `conf.live.cfp.proposal.adapter.out.event`
-- [ ] Implémenter `EventExistsAdapter implements EventExistsPort` (constructeur prenant un `FindEventUseCase`, méthode `existsById(String eventId)` déléguant à `findEventUseCase.findById(eventId).isPresent()`) dans `proposal/adapter/out/event/EventExistsAdapter.java`, avec `@Component`
-- [ ] Mettre à jour `ProposalConfiguration.createProposalUseCase(...)` pour injecter `EventExistsPort` en plus de `SaveProposalPort` et `Clock` dans `proposal/config/ProposalConfiguration.java`
-- [ ] RED: `EventProposalIntegrationTest#should_create_and_list_events_through_the_http_api` (`@SpringBootTest` + `@AutoConfigureMockMvc`) — assert que `POST /api/events` puis `GET /api/events` retourne l'événement créé
-- [ ] GREEN: corriger le câblage jusqu'à ce que ce test passe (aucune nouvelle classe de production attendue si les phases précédentes sont complètes)
-- [ ] RED: `EventProposalIntegrationTest#should_submit_a_proposal_linked_to_an_existing_event` — assert que soumettre une proposition avec l'`eventId` d'un événement préalablement créé retourne 201 et que la proposition persistée porte cet `eventId`
-- [ ] GREEN: corriger le câblage jusqu'à ce que ce test passe
-- [ ] RED: `EventProposalIntegrationTest#should_reject_a_proposal_referencing_an_unknown_event` — assert que soumettre une proposition avec un `eventId` inexistant (UUID valide mais non créé) retourne 400
-- [ ] GREEN: corriger le câblage jusqu'à ce que ce test passe
-- [ ] RED: `EventProposalIntegrationTest#should_submit_a_proposal_without_an_event_as_before` — assert que soumettre une proposition sans `eventId` retourne 201, comme avant cette fonctionnalité (non-régression)
-- [ ] GREEN: corriger le câblage jusqu'à ce que ce test passe
-- [ ] Exécuter la suite complète (`./mvnw -o test`) et vérifier que `HexagonalArchitectureTest` ne signale aucune violation pour le nouveau domaine `event`
+- [x] Créer `EventConfiguration` (`@Configuration`) exposant les beans `CreateEventUseCase` (`CreateEventService` + `SaveEventPort`), `ListEventsUseCase` (`ListEventsService` + `ListEventsPort`) et `FindEventUseCase` (`FindEventService` + `FindEventPort`) dans `event/config/EventConfiguration.java`
+- [x] Créer le package `conf.live.cfp.proposal.adapter.out.event`
+- [x] Implémenter `EventExistsAdapter implements EventExistsPort` (constructeur prenant un `FindEventUseCase`, méthode `existsById(String eventId)` déléguant à `findEventUseCase.findById(eventId).isPresent()`) dans `proposal/adapter/out/event/EventExistsAdapter.java`, avec `@Component`
+- [x] Mettre à jour `ProposalConfiguration.createProposalUseCase(...)` pour injecter `EventExistsPort` en plus de `SaveProposalPort` et `Clock` dans `proposal/config/ProposalConfiguration.java`
+- [x] RED: `EventProposalIntegrationTest#should_create_and_list_events_through_the_http_api` (`@SpringBootTest` + `@AutoConfigureMockMvc`) — assert que `POST /api/events` puis `GET /api/events` retourne l'événement créé
+- [x] GREEN: corriger le câblage jusqu'à ce que ce test passe (aucune nouvelle classe de production attendue si les phases précédentes sont complètes)
+- [x] RED: `EventProposalIntegrationTest#should_submit_a_proposal_linked_to_an_existing_event` — assert que soumettre une proposition avec l'`eventId` d'un événement préalablement créé retourne 201 et que la proposition persistée porte cet `eventId`
+- [x] GREEN: corriger le câblage jusqu'à ce que ce test passe
+- [x] RED: `EventProposalIntegrationTest#should_reject_a_proposal_referencing_an_unknown_event` — assert que soumettre une proposition avec un `eventId` inexistant (UUID valide mais non créé) retourne 400
+- [x] GREEN: corriger le câblage jusqu'à ce que ce test passe
+- [x] RED: `EventProposalIntegrationTest#should_submit_a_proposal_without_an_event_as_before` — assert que soumettre une proposition sans `eventId` retourne 201, comme avant cette fonctionnalité (non-régression)
+- [x] GREEN: corriger le câblage jusqu'à ce que ce test passe
+- [x] Exécuter la suite complète (`./mvnw -o test`) et vérifier que `HexagonalArchitectureTest` ne signale aucune violation pour le nouveau domaine `event`
