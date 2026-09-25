@@ -5,21 +5,21 @@ Spec: [sdlc/001-conference-events.md](001-conference-events.md) · Design: [sdlc
 ### Phase 0: Contrats (domaine `event` + extension `proposal`)
 _Depends on: none. Blocks all other phases (defines the shared contracts)._
 
-- [ ] Créer les packages `conf.live.cfp.event.domain.model`, `conf.live.cfp.event.domain.exception`, `conf.live.cfp.event.application.port.in`, `conf.live.cfp.event.application.port.out`, `conf.live.cfp.event.application.service`, `conf.live.cfp.event.adapter.in.web`, `conf.live.cfp.event.adapter.out.persistence`, `conf.live.cfp.event.config`
-- [ ] Définir `EventId` (record `UUID value`, méthodes statiques `newId()` et `fromString(String)`, `toString()` délégué à `value`) dans `event/domain/model/EventId.java`, sur le modèle de `ProposalId`
-- [ ] Définir `InvalidEventException` (RuntimeException à message) dans `event/domain/exception/InvalidEventException.java`, sur le modèle de `InvalidProposalException`
-- [ ] Définir le squelette de `Event` (classe finale, champs `EventId id`, `String name`, sans logique de validation encore) dans `event/domain/model/Event.java`
-- [ ] Définir `CreateEventCommand` (record `String name`) dans `event/application/port/in/CreateEventCommand.java`
-- [ ] Définir l'interface `CreateEventUseCase` (méthode `Event createEvent(CreateEventCommand command)`) dans `event/application/port/in/CreateEventUseCase.java`
-- [ ] Définir l'interface `ListEventsUseCase` (méthode `List<Event> listEvents()`) dans `event/application/port/in/ListEventsUseCase.java`
-- [ ] Définir l'interface `FindEventUseCase` (méthode `Optional<Event> findById(String eventId)`) dans `event/application/port/in/FindEventUseCase.java`
-- [ ] Définir l'interface `SaveEventPort` (méthode `Event save(Event event)`) dans `event/application/port/out/SaveEventPort.java`
-- [ ] Définir l'interface `ListEventsPort` (méthode `List<Event> findAll()`) dans `event/application/port/out/ListEventsPort.java`
-- [ ] Définir l'interface `FindEventPort` (méthode `Optional<Event> findById(EventId id)`) dans `event/application/port/out/FindEventPort.java`
-- [ ] Définir `UnknownEventException` (RuntimeException à message) dans `conf/live/cfp/proposal/domain/exception/UnknownEventException.java`
-- [ ] Définir l'interface `EventExistsPort` (méthode `boolean existsById(String eventId)`) dans `conf/live/cfp/proposal/application/port/out/EventExistsPort.java`
-- [ ] Étendre la signature de `CreateProposalCommand` en ajoutant le champ `String eventId` (nullable) dans `proposal/application/port/in/CreateProposalCommand.java`
-- [ ] Vérifier que le projet compile après ces ajouts (`./mvnw -o compile`)
+- [x] Créer les packages `conf.live.cfp.event.domain.model`, `conf.live.cfp.event.domain.exception`, `conf.live.cfp.event.application.port.in`, `conf.live.cfp.event.application.port.out`, `conf.live.cfp.event.application.service`, `conf.live.cfp.event.adapter.in.web`, `conf.live.cfp.event.adapter.out.persistence`, `conf.live.cfp.event.config`
+- [x] Définir `EventId` (record `UUID value`, méthodes statiques `newId()` et `fromString(String)`, `toString()` délégué à `value`) dans `event/domain/model/EventId.java`, sur le modèle de `ProposalId`
+- [x] Définir `InvalidEventException` (RuntimeException à message) dans `event/domain/exception/InvalidEventException.java`, sur le modèle de `InvalidProposalException`
+- [x] Définir le squelette de `Event` (classe finale, champs `EventId id`, `String name`, sans logique de validation encore) dans `event/domain/model/Event.java`
+- [x] Définir `CreateEventCommand` (record `String name`) dans `event/application/port/in/CreateEventCommand.java`
+- [x] Définir l'interface `CreateEventUseCase` (méthode `Event createEvent(CreateEventCommand command)`) dans `event/application/port/in/CreateEventUseCase.java`
+- [x] Définir l'interface `ListEventsUseCase` (méthode `List<Event> listEvents()`) dans `event/application/port/in/ListEventsUseCase.java`
+- [x] Définir l'interface `FindEventUseCase` (méthode `Optional<Event> findById(String eventId)`) dans `event/application/port/in/FindEventUseCase.java`
+- [x] Définir l'interface `SaveEventPort` (méthode `Event save(Event event)`) dans `event/application/port/out/SaveEventPort.java`
+- [x] Définir l'interface `ListEventsPort` (méthode `List<Event> findAll()`) dans `event/application/port/out/ListEventsPort.java`
+- [x] Définir l'interface `FindEventPort` (méthode `Optional<Event> findById(EventId id)`) dans `event/application/port/out/FindEventPort.java`
+- [x] Définir `UnknownEventException` (RuntimeException à message) dans `conf/live/cfp/proposal/domain/exception/UnknownEventException.java`
+- [x] Définir l'interface `EventExistsPort` (méthode `boolean existsById(String eventId)`) dans `conf/live/cfp/proposal/application/port/out/EventExistsPort.java`
+- [x] Étendre la signature de `CreateProposalCommand` en ajoutant le champ `String eventId` (nullable) dans `proposal/application/port/in/CreateProposalCommand.java`
+- [x] Vérifier que le projet compile après ces ajouts (`./mvnw -o compile`)
 
 ### Phase 1a: `event` — couche application
 _Depends on: Phase 0. Can run in parallel with: Phase 1b, 1c, 1d, 1e (toutes ne dépendent que des contrats de Phase 0)._
