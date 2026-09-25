@@ -27,4 +27,14 @@ class EventTest {
                 .isInstanceOf(InvalidEventException.class)
                 .hasMessageContaining("name");
     }
+
+    @Test
+    void should_reconstitute_an_event_with_an_existing_id() {
+        EventId id = EventId.newId();
+
+        Event event = Event.reconstitute(id, "Name");
+
+        assertThat(event.id()).isEqualTo(id);
+        assertThat(event.name()).isEqualTo("Name");
+    }
 }

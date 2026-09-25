@@ -22,6 +22,10 @@ public final class Event {
         return new Event(EventId.newId(), name);
     }
 
+    public static Event reconstitute(EventId id, String name) {
+        return new Event(id, name);
+    }
+
     public EventId id() {
         return id;
     }
