@@ -3,6 +3,7 @@ package conf.live.cfp.event.adapter.in.web;
 import tools.jackson.databind.ObjectMapper;
 import conf.live.cfp.event.application.port.in.CreateEventCommand;
 import conf.live.cfp.event.application.port.in.CreateEventUseCase;
+import conf.live.cfp.event.domain.exception.InvalidEventException;
 import conf.live.cfp.event.domain.model.Event;
 import conf.live.cfp.event.domain.model.EventId;
 import org.junit.jupiter.api.Test;
@@ -49,6 +50,17 @@ class EventControllerTest {
         mockMvc.perform(post("/api/events")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(new CreateEventRequest(""))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_return_400_when_use_case_rejects_the_event() throws Exception {
+        when(createEventUseCase.createEvent(any(CreateEventCommand.class)))
+                .thenThrow(new InvalidEventException("Event name must not be blank"));
+
+        mockMvc.perform(post("/api/events")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new CreateEventRequest("Some name"))))
                 .andExpect(status().isBadRequest());
     }
 }
