@@ -14,7 +14,8 @@ public record ProposalResponse(
         String speakerName,
         String speakerEmail,
         String status,
-        Instant submittedAt) {
+        Instant submittedAt,
+        String eventId) {
 
     public static ProposalResponse from(Proposal proposal) {
         return new ProposalResponse(
@@ -24,6 +25,7 @@ public record ProposalResponse(
                 proposal.speaker().name(),
                 proposal.speaker().email(),
                 proposal.status().name(),
-                proposal.submittedAt());
+                proposal.submittedAt(),
+                proposal.eventId());
     }
 }

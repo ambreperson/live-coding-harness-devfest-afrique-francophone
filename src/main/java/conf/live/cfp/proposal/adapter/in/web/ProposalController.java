@@ -28,7 +28,8 @@ public class ProposalController {
     @PostMapping
     public ResponseEntity<ProposalResponse> createProposal(@Valid @RequestBody CreateProposalRequest request) {
         Proposal created = createProposalUseCase.createProposal(new CreateProposalCommand(
-                request.title(), request.description(), request.speakerName(), request.speakerEmail(), null));
+                request.title(), request.description(), request.speakerName(), request.speakerEmail(),
+                request.eventId()));
         ProposalResponse response = ProposalResponse.from(created);
         return ResponseEntity.created(URI.create("/api/proposals/" + response.id())).body(response);
     }

@@ -10,5 +10,6 @@ public record CreateProposalRequest(
         @NotBlank String title,
         @NotBlank String description,
         @NotBlank String speakerName,
-        @NotBlank @Email String speakerEmail) {
+        @NotBlank @Email String speakerEmail,
+        String eventId) {
 }

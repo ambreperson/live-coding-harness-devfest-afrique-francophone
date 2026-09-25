@@ -50,7 +50,8 @@ class ProposalControllerTest {
                                 "Hexagonal architecture in practice",
                                 "A talk about ports and adapters",
                                 "Ada Lovelace",
-                                "ada@example.com"))))
+                                "ada@example.com",
+                                null))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("11111111-1111-1111-1111-111111111111"))
                 .andExpect(jsonPath("$.title").value("Hexagonal architecture in practice"))
@@ -65,7 +66,7 @@ class ProposalControllerTest {
         mockMvc.perform(post("/api/proposals")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(new CreateProposalRequest(
-                                "", "A talk about ports and adapters", "Ada Lovelace", "ada@example.com"))))
+                                "", "A talk about ports and adapters", "Ada Lovelace", "ada@example.com", null))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -74,7 +75,7 @@ class ProposalControllerTest {
         mockMvc.perform(post("/api/proposals")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(new CreateProposalRequest(
-                                "Title", "Description", "Ada Lovelace", "not-an-email"))))
+                                "Title", "Description", "Ada Lovelace", "not-an-email", null))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -86,7 +87,7 @@ class ProposalControllerTest {
         mockMvc.perform(post("/api/proposals")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(new CreateProposalRequest(
-                                "Title", "Description", "Ada Lovelace", "ada@example.com"))))
+                                "Title", "Description", "Ada Lovelace", "ada@example.com", null))))
                 .andExpect(status().isBadRequest());
     }
 }
