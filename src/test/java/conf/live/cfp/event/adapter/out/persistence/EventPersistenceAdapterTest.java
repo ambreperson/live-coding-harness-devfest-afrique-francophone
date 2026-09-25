@@ -46,4 +46,16 @@ class EventPersistenceAdapterTest {
         assertThat(events).extracting(Event::name)
                 .containsExactlyInAnyOrder("DevFest Afrique Francophone", "DevFest Nantes");
     }
+
+    @Test
+    void should_find_an_event_by_id() {
+        Event event = new Event(EventId.newId(), "DevFest Afrique Francophone");
+        adapter.save(event);
+
+        Optional<Event> found = adapter.findById(event.id());
+
+        assertThat(found).isPresent();
+        assertThat(found.get().id()).isEqualTo(event.id());
+        assertThat(found.get().name()).isEqualTo("DevFest Afrique Francophone");
+    }
 }
