@@ -37,7 +37,7 @@ class CreateProposalServiceTest {
         CreateProposalService service = new CreateProposalService(saveProposalPort, clock);
         CreateProposalCommand command = new CreateProposalCommand(
                 "Hexagonal architecture in practice", "A talk about ports and adapters",
-                "Ada Lovelace", "ada@example.com");
+                "Ada Lovelace", "ada@example.com", null);
         when(saveProposalPort.save(any(Proposal.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Proposal result = service.createProposal(command);
@@ -58,7 +58,7 @@ class CreateProposalServiceTest {
     void should_reject_an_invalid_command_without_calling_the_port() {
         CreateProposalService service = new CreateProposalService(saveProposalPort, clock);
         CreateProposalCommand command = new CreateProposalCommand("", "A talk about ports and adapters",
-                "Ada Lovelace", "ada@example.com");
+                "Ada Lovelace", "ada@example.com", null);
 
         assertThatThrownBy(() -> service.createProposal(command))
                 .isInstanceOf(InvalidProposalException.class);
