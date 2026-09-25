@@ -47,6 +47,6 @@ public class EventPersistenceAdapter implements SaveEventPort, ListEventsPort, F
     }
 
     private Event toDomain(EventJpaEntity entity) {
-        return new Event(EventId.fromString(entity.getId()), entity.getName());
+        return Event.reconstitute(EventId.fromString(entity.getId()), entity.getName());
     }
 }

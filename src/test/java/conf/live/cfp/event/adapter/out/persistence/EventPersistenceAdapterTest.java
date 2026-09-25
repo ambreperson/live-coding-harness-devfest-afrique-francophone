@@ -24,7 +24,7 @@ class EventPersistenceAdapterTest {
 
     @Test
     void should_save_an_event_and_make_it_retrievable() {
-        Event event = new Event(EventId.newId(), "DevFest Afrique Francophone");
+        Event event = Event.reconstitute(EventId.newId(), "DevFest Afrique Francophone");
 
         adapter.save(event);
 
@@ -35,8 +35,8 @@ class EventPersistenceAdapterTest {
 
     @Test
     void should_find_all_saved_events() {
-        Event first = new Event(EventId.newId(), "DevFest Afrique Francophone");
-        Event second = new Event(EventId.newId(), "DevFest Nantes");
+        Event first = Event.reconstitute(EventId.newId(), "DevFest Afrique Francophone");
+        Event second = Event.reconstitute(EventId.newId(), "DevFest Nantes");
 
         adapter.save(first);
         adapter.save(second);
@@ -49,7 +49,7 @@ class EventPersistenceAdapterTest {
 
     @Test
     void should_find_an_event_by_id() {
-        Event event = new Event(EventId.newId(), "DevFest Afrique Francophone");
+        Event event = Event.reconstitute(EventId.newId(), "DevFest Afrique Francophone");
         adapter.save(event);
 
         Optional<Event> found = adapter.findById(event.id());

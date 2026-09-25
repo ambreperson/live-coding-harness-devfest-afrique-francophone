@@ -39,7 +39,7 @@ class EventControllerTest {
 
     @Test
     void should_return_201_with_the_created_event() throws Exception {
-        Event created = new Event(
+        Event created = Event.reconstitute(
                 EventId.fromString("11111111-1111-1111-1111-111111111111"),
                 "DevFest Afrique Francophone");
         when(createEventUseCase.createEvent(any(CreateEventCommand.class))).thenReturn(created);
@@ -73,9 +73,9 @@ class EventControllerTest {
 
     @Test
     void should_return_200_with_the_list_of_events() throws Exception {
-        Event first = new Event(
+        Event first = Event.reconstitute(
                 EventId.fromString("11111111-1111-1111-1111-111111111111"), "DevFest Afrique Francophone");
-        Event second = new Event(
+        Event second = Event.reconstitute(
                 EventId.fromString("22222222-2222-2222-2222-222222222222"), "DevFest Lille");
         when(listEventsUseCase.listEvents()).thenReturn(List.of(first, second));
 
