@@ -18,10 +18,6 @@ public final class Proposal {
     private final Instant submittedAt;
     private final String eventId;
 
-    // NOTE: eventId is a TEMPORARY shim added locally in this worktree so that adapter tests
-    // (web + persistence) can construct a Proposal linked to an event. Another agent is adding
-    // the definitive eventId support to Proposal.submit(...)/reconstitute(...) in a parallel
-    // worktree; the orchestrator will reconcile both versions of this file at merge time.
     private Proposal(ProposalId id, String title, String description, Speaker speaker,
                       ProposalStatus status, Instant submittedAt, String eventId) {
         if (title == null || title.isBlank()) {
