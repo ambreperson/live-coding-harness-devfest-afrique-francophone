@@ -62,6 +62,30 @@ class ProposalControllerTest {
     }
 
     @Test
+    void should_return_201_with_the_event_id_when_proposal_is_linked_to_an_event() throws Exception {
+        Proposal created = Proposal.reconstitute(
+                ProposalId.fromString("11111111-1111-1111-1111-111111111111"),
+                "Hexagonal architecture in practice",
+                "A talk about ports and adapters",
+                new Speaker("Ada Lovelace", "ada@example.com"),
+                conf.live.cfp.proposal.domain.model.ProposalStatus.SUBMITTED,
+                Instant.parse("2026-09-25T10:00:00Z"),
+                "22222222-2222-2222-2222-222222222222");
+        when(createProposalUseCase.createProposal(any(CreateProposalCommand.class))).thenReturn(created);
+
+        mockMvc.perform(post("/api/proposals")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new CreateProposalRequest(
+                                "Hexagonal architecture in practice",
+                                "A talk about ports and adapters",
+                                "Ada Lovelace",
+                                "ada@example.com",
+                                "22222222-2222-2222-2222-222222222222"))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.eventId").value("22222222-2222-2222-2222-222222222222"));
+    }
+
+    @Test
     void should_return_400_when_title_is_blank() throws Exception {
         mockMvc.perform(post("/api/proposals")
                         .contentType("application/json")
