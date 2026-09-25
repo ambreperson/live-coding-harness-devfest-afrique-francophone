@@ -114,4 +114,18 @@ class ProposalControllerTest {
                                 "Title", "Description", "Ada Lovelace", "ada@example.com", null))))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_return_400_when_use_case_rejects_an_unknown_event() throws Exception {
+        when(createProposalUseCase.createProposal(any(CreateProposalCommand.class)))
+                .thenThrow(new conf.live.cfp.proposal.domain.exception.UnknownEventException(
+                        "Unknown event: 33333333-3333-3333-3333-333333333333"));
+
+        mockMvc.perform(post("/api/proposals")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new CreateProposalRequest(
+                                "Title", "Description", "Ada Lovelace", "ada@example.com",
+                                "33333333-3333-3333-3333-333333333333"))))
+                .andExpect(status().isBadRequest());
+    }
 }
