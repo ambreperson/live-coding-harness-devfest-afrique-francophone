@@ -34,7 +34,8 @@ public class ProposalPersistenceAdapter implements SaveProposalPort {
                 proposal.speaker().name(),
                 proposal.speaker().email(),
                 proposal.status().name(),
-                proposal.submittedAt());
+                proposal.submittedAt(),
+                proposal.eventId());
     }
 
     private Proposal toDomain(ProposalJpaEntity entity) {
@@ -44,6 +45,7 @@ public class ProposalPersistenceAdapter implements SaveProposalPort {
                 entity.getDescription(),
                 new Speaker(entity.getSpeakerName(), entity.getSpeakerEmail()),
                 ProposalStatus.valueOf(entity.getStatus()),
-                entity.getSubmittedAt());
+                entity.getSubmittedAt(),
+                entity.getEventId());
     }
 }

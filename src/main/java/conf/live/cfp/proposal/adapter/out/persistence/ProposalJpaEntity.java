@@ -32,12 +32,15 @@ public class ProposalJpaEntity {
     @Column(nullable = false)
     private Instant submittedAt;
 
+    @Column(name = "event_id", nullable = true)
+    private String eventId;
+
     protected ProposalJpaEntity() {
         // required by JPA
     }
 
     public ProposalJpaEntity(String id, String title, String description, String speakerName,
-                              String speakerEmail, String status, Instant submittedAt) {
+                              String speakerEmail, String status, Instant submittedAt, String eventId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -45,6 +48,7 @@ public class ProposalJpaEntity {
         this.speakerEmail = speakerEmail;
         this.status = status;
         this.submittedAt = submittedAt;
+        this.eventId = eventId;
     }
 
     public String getId() {
@@ -73,5 +77,9 @@ public class ProposalJpaEntity {
 
     public Instant getSubmittedAt() {
         return submittedAt;
+    }
+
+    public String getEventId() {
+        return eventId;
     }
 }

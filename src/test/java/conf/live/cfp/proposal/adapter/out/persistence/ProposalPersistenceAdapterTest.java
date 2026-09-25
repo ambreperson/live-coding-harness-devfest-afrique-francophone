@@ -42,4 +42,37 @@ class ProposalPersistenceAdapterTest {
         assertThat(persisted.get().getStatus()).isEqualTo("SUBMITTED");
         assertThat(persisted.get().getSubmittedAt()).isEqualTo(Instant.parse("2026-09-25T10:00:00Z"));
     }
+
+    @Test
+    void should_save_a_proposal_linked_to_an_event_and_make_it_retrievable() {
+        Proposal proposal = Proposal.submit("Hexagonal architecture in practice",
+                "A talk about ports and adapters",
+                new Speaker("Ada Lovelace", "ada@example.com"),
+                Instant.parse("2026-09-25T10:00:00Z"),
+                "22222222-2222-2222-2222-222222222222");
+
+        Proposal saved = adapter.save(proposal);
+
+        assertThat(saved.eventId()).isEqualTo("22222222-2222-2222-2222-222222222222");
+
+        Optional<ProposalJpaEntity> persisted = jpaRepository.findById(proposal.id().toString());
+        assertThat(persisted).isPresent();
+        assertThat(persisted.get().getEventId()).isEqualTo("22222222-2222-2222-2222-222222222222");
+    }
+
+    @Test
+    void should_save_a_proposal_without_an_event() {
+        Proposal proposal = Proposal.submit("Hexagonal architecture in practice",
+                "A talk about ports and adapters",
+                new Speaker("Ada Lovelace", "ada@example.com"),
+                Instant.parse("2026-09-25T10:00:00Z"));
+
+        Proposal saved = adapter.save(proposal);
+
+        assertThat(saved.eventId()).isNull();
+
+        Optional<ProposalJpaEntity> persisted = jpaRepository.findById(proposal.id().toString());
+        assertThat(persisted).isPresent();
+        assertThat(persisted.get().getEventId()).isNull();
+    }
 }

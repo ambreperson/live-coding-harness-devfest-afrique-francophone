@@ -33,7 +33,8 @@ class ProposalCreationIntegrationTest {
                 "Hexagonal architecture in practice",
                 "A talk about ports and adapters",
                 "Ada Lovelace",
-                "ada@example.com");
+                "ada@example.com",
+                null);
 
         String responseBody = mockMvc.perform(post("/api/proposals")
                         .contentType("application/json")
