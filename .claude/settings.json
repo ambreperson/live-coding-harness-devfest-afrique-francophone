@@ -16,6 +16,17 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\"; output=$(./mvnw -o test 2>&1); line=$(echo \"$output\" | grep -E \"Tests run: [0-9]+, Failures: [0-9]+, Errors: [0-9]+, Skipped: [0-9]+$\" | tail -1); if [ -z \"$line\" ]; then msg=\"Tests: build failed to run\"; else run=$(echo \"$line\" | grep -oE \"Tests run: [0-9]+\" | grep -oE \"[0-9]+\"); fail=$(echo \"$line\" | grep -oE \"Failures: [0-9]+\" | grep -oE \"[0-9]+\"); err=$(echo \"$line\" | grep -oE \"Errors: [0-9]+\" | grep -oE \"[0-9]+\"); passed=$((run - fail - err)); if [ \"$fail\" -eq 0 ] && [ \"$err\" -eq 0 ]; then msg=\"$passed/$run tests passed\"; else msg=\"$passed/$run tests passed ($((fail+err)) failed)\"; fi; fi; printf '{\"systemMessage\": \"%s\"}' \"$msg\"",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }
