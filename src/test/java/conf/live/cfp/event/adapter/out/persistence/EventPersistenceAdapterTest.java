@@ -58,4 +58,11 @@ class EventPersistenceAdapterTest {
         assertThat(found.get().id()).isEqualTo(event.id());
         assertThat(found.get().name()).isEqualTo("DevFest Afrique Francophone");
     }
+
+    @Test
+    void should_return_empty_when_event_id_is_unknown() {
+        Optional<Event> found = adapter.findById(EventId.newId());
+
+        assertThat(found).isEmpty();
+    }
 }
