@@ -61,4 +61,19 @@ class ProposalTest {
                 .isInstanceOf(InvalidProposalException.class)
                 .hasMessageContaining("speaker");
     }
+
+    @Test
+    void should_submit_a_proposal_linked_to_an_event() {
+        Proposal proposal = Proposal.submit("Title", "Description", A_SPEAKER, NOW,
+                "11111111-1111-1111-1111-111111111111");
+
+        assertThat(proposal.eventId()).isEqualTo("11111111-1111-1111-1111-111111111111");
+    }
+
+    @Test
+    void should_submit_a_proposal_without_an_event() {
+        Proposal proposal = Proposal.submit("Title", "Description", A_SPEAKER, NOW, null);
+
+        assertThat(proposal.eventId()).isNull();
+    }
 }
