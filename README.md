@@ -25,7 +25,7 @@ Drop `-o` if you need to re-resolve dependencies from a remote repository.
 ./mvnw -o clean package                                           # build the executable jar
 ```
 
-The application exposes one endpoint so far:
+The application exposes these endpoints so far:
 
 ```
 POST /api/proposals
@@ -35,8 +35,25 @@ Content-Type: application/json
   "title": "Hexagonal architecture in practice",
   "description": "A talk about ports and adapters",
   "speakerName": "Ada Lovelace",
-  "speakerEmail": "ada@example.com"
+  "speakerEmail": "ada@example.com",
+  "eventId": "..."
 }
+```
+
+`eventId` is optional; if present it must reference an existing event (`POST /api/events`
+below), otherwise the request is rejected with `400`.
+
+```
+POST /api/events
+Content-Type: application/json
+
+{
+  "name": "DevFest Afrique Francophone"
+}
+```
+
+```
+GET /api/events
 ```
 
 It persists to an in-memory H2 database by default (see `src/main/resources/application.properties`).

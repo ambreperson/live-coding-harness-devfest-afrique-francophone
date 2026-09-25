@@ -25,7 +25,7 @@ Drop `-o` if dependencies need to be re-resolved from a remote repo.
 
 ## Architecture
 
-The codebase follows **hexagonal (ports & adapters) architecture**, organized by business domain under `conf.live.cfp.<domain>` rather than by technical layer at the top level. The first (and currently only) domain is `proposal`. Future features/domains should follow the same package shape:
+The codebase follows **hexagonal (ports & adapters) architecture**, organized by business domain under `conf.live.cfp.<domain>` rather than by technical layer at the top level. There are two domains so far, `proposal` and `event` (a `proposal` can optionally reference an `event` it belongs to). Future features/domains should follow the same package shape:
 
 ```
 <domain>/
@@ -42,7 +42,7 @@ The codebase follows **hexagonal (ports & adapters) architecture**, organized by
   config/              # @Configuration classes wiring application services to ports as @Bean
 ```
 
-Key design rule enforced in this codebase: **`domain` and `application` packages must stay framework-agnostic** (no Spring annotations, no JPA, no web types); `config` wires application services to their ports as `@Bean`s. This is a deliberate application of the Dependency Inversion Principle, and it plus the other conventions (invariant validation in constructors, injected `Clock`, explicit entity/domain mapping, per-domain exception handling) are explained with their rationale in [ARCHITECTURE.md](ARCHITECTURE.md) — follow them when adding new domains.
+Key design rule enforced in this codebase: **`domain` and `application` packages must stay framework-agnostic** (no Spring annotations, no JPA, no web types); `config` wires application services to their ports as `@Bean`s. This is a deliberate application of the Dependency Inversion Principle, and it plus the other conventions (invariant validation in constructors, injected `Clock`, explicit entity/domain mapping, per-domain exception handling, and the pattern for cross-domain calls — a consumer-owned out-port implemented by an adapter that calls the other domain's in-port, see `EventExistsPort`/`EventExistsAdapter`) are explained with their rationale in [ARCHITECTURE.md](ARCHITECTURE.md) — follow them when adding new domains.
 
 ## Testing
 
