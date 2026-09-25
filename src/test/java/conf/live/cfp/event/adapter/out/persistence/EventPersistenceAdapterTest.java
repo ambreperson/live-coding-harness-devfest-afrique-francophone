@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,5 +31,19 @@ class EventPersistenceAdapterTest {
         Optional<EventJpaEntity> persisted = jpaRepository.findById(event.id().toString());
         assertThat(persisted).isPresent();
         assertThat(persisted.get().getName()).isEqualTo("DevFest Afrique Francophone");
+    }
+
+    @Test
+    void should_find_all_saved_events() {
+        Event first = new Event(EventId.newId(), "DevFest Afrique Francophone");
+        Event second = new Event(EventId.newId(), "DevFest Nantes");
+
+        adapter.save(first);
+        adapter.save(second);
+
+        List<Event> events = adapter.findAll();
+
+        assertThat(events).extracting(Event::name)
+                .containsExactlyInAnyOrder("DevFest Afrique Francophone", "DevFest Nantes");
     }
 }
