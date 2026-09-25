@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,5 +30,15 @@ class FindEventServiceTest {
         Optional<Event> result = service.findById(id.toString());
 
         assertThat(result).contains(event);
+    }
+
+    @Test
+    void should_return_empty_when_id_is_malformed() {
+        FindEventService service = new FindEventService(findEventPort);
+
+        Optional<Event> result = service.findById("not-a-uuid");
+
+        assertThat(result).isEmpty();
+        verifyNoInteractions(findEventPort);
     }
 }

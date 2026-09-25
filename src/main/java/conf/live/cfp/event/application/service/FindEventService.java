@@ -20,6 +20,12 @@ public class FindEventService implements FindEventUseCase {
 
     @Override
     public Optional<Event> findById(String eventId) {
-        return findEventPort.findById(EventId.fromString(eventId));
+        EventId id;
+        try {
+            id = EventId.fromString(eventId);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
+        return findEventPort.findById(id);
     }
 }
