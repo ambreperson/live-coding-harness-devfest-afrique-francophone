@@ -21,17 +21,6 @@ public class ProposalConfiguration {
         return Clock.systemUTC();
     }
 
-    // TODO(Phase 2 - event persistence adapter): this is a temporary stand-in for
-    // EventExistsPort, wired here only so the module compiles/starts after Phase 1d.
-    // It must be replaced by a real adapter backed by the event domain's persistence
-    // (e.g. delegating to FindEventPort) once that adapter exists; until then it
-    // always reports events as unknown, so proposals can only be submitted without
-    // an eventId in a running application.
-    @Bean
-    public EventExistsPort eventExistsPort() {
-        return eventId -> false;
-    }
-
     @Bean
     public CreateProposalUseCase createProposalUseCase(SaveProposalPort saveProposalPort,
                                                         EventExistsPort eventExistsPort, Clock clock) {
