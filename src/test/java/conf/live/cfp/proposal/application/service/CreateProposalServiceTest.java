@@ -1,8 +1,10 @@
 package conf.live.cfp.proposal.application.service;
 
 import conf.live.cfp.proposal.application.port.in.CreateProposalCommand;
+import conf.live.cfp.proposal.application.port.out.EventExistsPort;
 import conf.live.cfp.proposal.application.port.out.SaveProposalPort;
 import conf.live.cfp.proposal.domain.exception.InvalidProposalException;
+import conf.live.cfp.proposal.domain.exception.UnknownEventException;
 import conf.live.cfp.proposal.domain.model.Proposal;
 import conf.live.cfp.proposal.domain.model.ProposalStatus;
 import org.junit.jupiter.api.Test;
@@ -30,11 +32,14 @@ class CreateProposalServiceTest {
     @Mock
     private SaveProposalPort saveProposalPort;
 
+    @Mock
+    private EventExistsPort eventExistsPort;
+
     private final Clock clock = Clock.fixed(NOW, ZoneOffset.UTC);
 
     @Test
     void should_submit_and_persist_a_valid_proposal() {
-        CreateProposalService service = new CreateProposalService(saveProposalPort, clock);
+        CreateProposalService service = new CreateProposalService(saveProposalPort, eventExistsPort, clock);
         CreateProposalCommand command = new CreateProposalCommand(
                 "Hexagonal architecture in practice", "A talk about ports and adapters",
                 "Ada Lovelace", "ada@example.com", null);
@@ -56,7 +61,7 @@ class CreateProposalServiceTest {
 
     @Test
     void should_reject_an_invalid_command_without_calling_the_port() {
-        CreateProposalService service = new CreateProposalService(saveProposalPort, clock);
+        CreateProposalService service = new CreateProposalService(saveProposalPort, eventExistsPort, clock);
         CreateProposalCommand command = new CreateProposalCommand("", "A talk about ports and adapters",
                 "Ada Lovelace", "ada@example.com", null);
 
@@ -64,5 +69,48 @@ class CreateProposalServiceTest {
                 .isInstanceOf(InvalidProposalException.class);
 
         verifyNoInteractions(saveProposalPort);
+    }
+
+    @Test
+    void should_submit_and_persist_a_proposal_linked_to_an_existing_event() {
+        CreateProposalService service = new CreateProposalService(saveProposalPort, eventExistsPort, clock);
+        CreateProposalCommand command = new CreateProposalCommand(
+                "Hexagonal architecture in practice", "A talk about ports and adapters",
+                "Ada Lovelace", "ada@example.com", "11111111-1111-1111-1111-111111111111");
+        when(eventExistsPort.existsById("11111111-1111-1111-1111-111111111111")).thenReturn(true);
+        when(saveProposalPort.save(any(Proposal.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Proposal result = service.createProposal(command);
+
+        assertThat(result.eventId()).isEqualTo("11111111-1111-1111-1111-111111111111");
+        verify(saveProposalPort).save(any(Proposal.class));
+    }
+
+    @Test
+    void should_reject_a_proposal_referencing_an_unknown_event() {
+        CreateProposalService service = new CreateProposalService(saveProposalPort, eventExistsPort, clock);
+        CreateProposalCommand command = new CreateProposalCommand(
+                "Hexagonal architecture in practice", "A talk about ports and adapters",
+                "Ada Lovelace", "ada@example.com", "11111111-1111-1111-1111-111111111111");
+        when(eventExistsPort.existsById("11111111-1111-1111-1111-111111111111")).thenReturn(false);
+
+        assertThatThrownBy(() -> service.createProposal(command))
+                .isInstanceOf(UnknownEventException.class);
+
+        verifyNoInteractions(saveProposalPort);
+    }
+
+    @Test
+    void should_submit_a_proposal_without_calling_event_exists_port_when_no_event_given() {
+        CreateProposalService service = new CreateProposalService(saveProposalPort, eventExistsPort, clock);
+        CreateProposalCommand command = new CreateProposalCommand(
+                "Hexagonal architecture in practice", "A talk about ports and adapters",
+                "Ada Lovelace", "ada@example.com", null);
+        when(saveProposalPort.save(any(Proposal.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Proposal result = service.createProposal(command);
+
+        assertThat(result.eventId()).isNull();
+        verifyNoInteractions(eventExistsPort);
     }
 }
