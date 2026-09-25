@@ -43,4 +43,12 @@ class EventControllerTest {
                 .andExpect(jsonPath("$.id").value("11111111-1111-1111-1111-111111111111"))
                 .andExpect(jsonPath("$.name").value("DevFest Afrique Francophone"));
     }
+
+    @Test
+    void should_return_400_when_name_is_blank() throws Exception {
+        mockMvc.perform(post("/api/events")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(new CreateEventRequest(""))))
+                .andExpect(status().isBadRequest());
+    }
 }
