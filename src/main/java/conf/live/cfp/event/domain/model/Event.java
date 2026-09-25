@@ -8,9 +8,13 @@ public final class Event {
     private final EventId id;
     private final String name;
 
-    public Event(EventId id, String name) {
+    private Event(EventId id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public static Event create(String name) {
+        return new Event(EventId.newId(), name);
     }
 
     public EventId id() {
